@@ -37,4 +37,4 @@ class Movie(models.Model):
     rated = models.IntegerField(choices=RATED)
 
     def __str__(self):
-        return self.name
+        return "%s (%d)" % (self.name, self.year)
