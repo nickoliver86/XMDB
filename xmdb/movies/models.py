@@ -5,11 +5,20 @@ from django.db import models
 class Director(models.Model):
     name = models.TextField()
 
+    def __str__(self):
+        return self.name
+
 class Writer(models.Model):
     name = models.TextField()
 
+    def __str__(self):
+        return self.name
+
 class Actor(models.Model):
-    name = models.TextField
+    name = models.TextField()
+
+    def __str__(self):
+        return self.name
 
 class Movie(models.Model):
     name = models.TextField()
@@ -26,3 +35,6 @@ class Movie(models.Model):
         (4, 'R')
     )
     rated = models.IntegerField(choices=RATED)
+
+    def __str__(self):
+        return self.name

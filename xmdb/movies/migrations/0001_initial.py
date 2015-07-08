@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
             name='Actor',
             fields=[
                 ('id', models.AutoField(auto_created=True, serialize=False, primary_key=True, verbose_name='ID')),
+                ('name', models.TextField()),
             ],
         ),
         migrations.CreateModel(
