@@ -13,4 +13,4 @@ class IndexView(generic.ListView):
 
 
 def IndexTest(request):
-    return render(request, 'index.html')
+    return render(request, 'movies/index.html')
