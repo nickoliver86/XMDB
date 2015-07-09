@@ -29,3 +29,7 @@ def UserSignUp(request):
     u.save()
 
     return render (request, 'movies/index.html', {'ErrorMessage':'This is an error message'})
+
+def MovieList(request):
+    themovies = Movie.objects.all()
+    return render (request, 'movies/movie_list.html', {"movies": themovies})

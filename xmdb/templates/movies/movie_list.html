@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div>
+            <table class='table table-condensed table-hover'>
+                <thead>
+                    <th>Movie</th>
+                    <th>Year</th>
+                    <th>Director</th>
+                    <th>Writer</th>
+                    <th>Actors</th>
+                    <th>Rating</th>
+                </thead>
+                {% for movie in movies %}
+                    <tr>
+                        <td>{{movie.name}}</td>
+                        <td>{{movie.year}}</td>
+                        <td>{{movie.director}}</td>
+                        <td>{{movie.writer}}</td>
+                        {%  for actor in movie.actors.all %}
+                            <td>{{actor}}</td>
+                        {% endfor %}
+                        <td>{{movie.rating}}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+    </div>
+
+</body>
