@@ -6,7 +6,11 @@ from django.views import generic
 # Create your views here.
 
 class IndexView(generic.ListView):
-    template_name = 'movies/index.html'
+    #template_name = 'movies/index.html'
     def get_queryset(self):
         """Return the last five published questions."""
         return "hey"
+
+
+def IndexTest(request):
+    return render(request, 'index.html')

@@ -1,7 +1,7 @@
-from django.conf.urls import url
+from django.conf.urls import url, patterns, include
 
 from . import views
 
-urlpatterns = [
-    url(r'^$', views.IndexView.as_view(), name='index'),
-]
+urlpatterns = patterns('movies.views',
+    url(r'^$', 'IndexTest'),
+)
