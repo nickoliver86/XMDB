@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 
 class Director(models.Model):
@@ -19,6 +19,10 @@ class Actor(models.Model):
 
     def __str__(self):
         return self.name
+class User(User):
+    def __str__(self):
+        return self.username
+
 
 class Movie(models.Model):
     name = models.TextField()

@@ -97,6 +97,19 @@
                 </div>
             </div>
         </div>
+        <div class="container" style= "width:33%;">
+            <form action="{% url 'movies:UserSignUp' %}" method="post" class="">
+                {% csrf_token %}
+                {{ ErrorMessage }}
+                <input type="text" class="form-control" name="username" id ="username" placeholder="Enter Desired Username" required autofocus>
+                <input type="text" class="form-control" name="email" id ="email" placeholder="Email" required autofocus>
+                <input type="password" class="form-control" name="password1" id="password1" placeholder="Password" required>
+                <input type="password" class="form-control" name="password2" id = "password2" placeholder="Confirm Password" required>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">
+                    Sign up</button>
+                <a href="#" class="pull-right need-help">Need help? </a><span class="clearfix"></span>
+            </form>
+        </div>
     </section>
 
     <!---
@@ -624,9 +637,6 @@
     <script src="/static/js/classie.js"></script>
     <script src="/static/js/cbpAnimatedHeader.js"></script>
 
-    <!-- Contact Form JavaScript -->
-    <script src="/static/js/jqBootstrapValidation.js"></script>
-    <script src="/static/js/contact_me.js"></script>
 
     <!-- Custom Theme JavaScript -->
     <script src="/static/js/agency.js"></script>
