@@ -2,13 +2,13 @@
 <html lang="en">
 
 <head>
-    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
 </head>
 
 <body>
 
     <div>
-            <table class='table table-condensed table-hover'>
+            <table border="1" width="100%">
                 <thead>
                     <th>Movie</th>
                     <th>Year</th>
@@ -19,14 +19,18 @@
                 </thead>
                 {% for movie in movies %}
                     <tr>
-                        <td>{{movie.name}}</td>
-                        <td>{{movie.year}}</td>
-                        <td>{{movie.director}}</td>
-                        <td>{{movie.writer}}</td>
-                        {%  for actor in movie.actors.all %}
-                            <td>{{actor}}</td>
-                        {% endfor %}
-                        <td>{{movie.rating}}</td>
+                        <td align="center">{{movie.name}}</td>
+                        <td align="center">{{movie.year}}</td>
+                        <td align="center">{{movie.director}}</td>
+                        <td align="center">{{movie.writer}}</td>
+                        <td align="center">
+                            <ul style="list-style: none;">
+                                {%  for actor in movie.actors.all %}
+                                    <li>{{actor}}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td align="center">{{movie.get_rated_display}}</td>
                     </tr>
                 {% endfor %}
             </table>
