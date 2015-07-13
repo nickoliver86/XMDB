@@ -39,6 +39,7 @@ class Movie(models.Model):
         (4, 'R')
     )
     rated = models.IntegerField(choices=RATED)
+    thumbnail = models.ImageField(upload_to="movie_thumbnails", null=True, blank=True)
 
     def __str__(self):
         return "%s (%d)" % (self.name, self.year)
