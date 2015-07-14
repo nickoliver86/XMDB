@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from movies.models import *
+import requests
 # Create your views here.
 
 class IndexView(generic.ListView):
@@ -32,4 +33,9 @@ def UserSignUp(request):
 
 def MovieList(request):
     themovies = Movie.objects.all()
-    return render (request, 'movies/movie_list.html', {"movies": themovies})
+    return render(request, 'movies/movie_list.html', {"movies": themovies})
+
+def MovieSummary(request, movie_id):
+    m = Movie.objects.get(id=movie_id)
+    r = requests.get('http://www.omdbapi.com/?t={0}&y=&plot=short&r=json'.format(m.name.replace(' ', '+')))
+    return render(request, 'movies/movie_summary.html', {'movie': r.json})
