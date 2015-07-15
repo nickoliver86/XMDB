@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^movie_summary/(\d+)/$', views.MovieSummary, name='MovieSummary'),
     url(r'search/$', views.Search, name ='Search'),
     url(r'^add_to_library/(\w+)/$', views.AddToLibrary, name='add_to_library'),
+    url(r'^remove_from_library/(\w+)/$', views.RemoveFromLibrary, name='remove_from_library'),
 ]

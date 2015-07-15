@@ -52,6 +52,7 @@ class Movie(models.Model):
     rated = models.IntegerField(choices=RATED, null=True, blank=True)
     thumbnail = models.ImageField(upload_to="movie_thumbnails", null=True, blank=True)
     poster = models.TextField(null=True)
+    imdbId = models.TextField(null=True)
 
     def __str__(self):
         return "%s (%d)" % (self.name, int(self.year))

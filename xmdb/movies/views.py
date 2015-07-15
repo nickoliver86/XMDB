@@ -37,19 +37,28 @@ def MovieList(request):
     for movie in themovies:
         r = requests.get('http://www.omdbapi.com/?t={0}&y=&plot=short&r=json'.format(movie.name.replace(' ', '+')))
         movie.poster = r.json().get('Poster')
+        movie.imdbId = r.json().get('imdbID')
+        movie.save()
     return render(request, 'movies/movie_list.html', {"movies": themovies})
 
 def MovieSummary(request, movie_id):
     m = Movie.objects.get(id=movie_id)
-    all_movies = Movie.objects.all()
     r = requests.get('http://www.omdbapi.com/?t={0}&y=&plot=short&r=json'.format(m.name.replace(' ', '+')))
-    return render(request, 'movies/movie_summary.html', {'movie': r.json, 'all_movies': all_movies})
+    try:
+        exists_in_library = Movie.objects.get(name=r.json().get('Title')).name
+    except Movie.DoesNotExist:
+        exists_in_library = False
+    return render(request, 'movies/movie_summary.html', {'movie': r.json, 'exists_in_library': exists_in_library})
 
 def Search(request):
     search_query = request.POST.get('search_query')
     r = requests.get('http://www.omdbapi.com/?t={0}&y=&plot=short&r=json'.format(search_query.replace(' ', '+')))
+    try:
+        exists_in_library = Movie.objects.get(name=r.json().get('Title')).name
+    except Movie.DoesNotExist:
+        exists_in_library = False
     if r.json().get('Response') == 'True':
-        return render(request, 'movies/movie_summary.html', {'movie': r.json})
+        return render(request, 'movies/movie_summary.html', {'movie': r.json, 'exists_in_library': exists_in_library})
     else:
         return render(request, 'movies/index.html', {'SearchError':'Movie not found!'})
 
@@ -78,17 +87,16 @@ def AddToLibrary(request, id):
     else:
         rated = 4
 
-    # m = Movie(j.get('Title'),
-    #           j.get('Year'),
-    #           d,
-    #           w,
-    #           alist,
-    #           int(rated))
-
     m = Movie.objects.create(name=j.get('Title'), year=j.get('Year'),
-                             director=d, writer=w, rated=rated, poster=p)
+                             director=d, writer=w, rated=rated, poster=p, imdbId=j.get('imdbId'))
     m.save()
     for a in alist:
         m.actors.add(a)
     m.save()
     return redirect('/movie_list')
+
+def RemoveFromLibrary(request, id):
+    deleteme = Movie.objects.get(imdbId=id)
+    deleteme.delete()
+    return redirect('/movie_list')
+
