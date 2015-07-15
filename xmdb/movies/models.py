@@ -19,10 +19,10 @@ class Actor(models.Model):
 
     def __str__(self):
         return self.name
+
 class User(User):
     def __str__(self):
         return self.username
-
 
 class Movie(models.Model):
     name = models.TextField()
