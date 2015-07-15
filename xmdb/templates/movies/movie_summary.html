@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% extends 'movies/base.html' %}
+
+{% block content %}
+
+    <body>
+        <div class="row">
+            <div style="padding-top: 2%;" class="hidden-xs col-sm-5 col-md-4">
+                <img src="{{ movie.Poster }}"/>
+            </div>
+            <div class="col-sm-7 col-md-8">
+                <div>
+                <h2>{{ movie.Title }} ({{ movie.Year }})</h2>
+                <h5>{{ movie.Rated }} | {{ movie.Runtime }} | {{ movie.Genre }} | {{ movie.Released }} ({{ movie.Country }})</h5>
+                </div>
+                <div style="padding-top: 1%">
+                    <h4>Average Rating: {{ movie.imdbRating }} from {{ movie.imdbVotes }} viewers</h4>
+                </div>
+                <div style="padding-top: 1%">
+                    <h4>{{ movie.Plot }}</h4>
+                </div>
+                <div style="padding-top: 1%">
+                    {% if movie.Director == movie.Writer %}
+                        <h4>Written and Directed By: {{ movie.Director }}</h4>
+                    {% else %}
+                        <div style="padding-top: 1%">
+                            <h4>Director: {{ movie.Director }}</h4>
+                        </div>
+                        <div style="padding-top: 1%">
+                            <h4>Writer: {{ movie.Writer }}</h4>
+                        </div>
+                    {% endif %}
+                </div>
+                <div style="padding-top: 1%">
+                    <h4>Stars: {{ movie.Actors }}</h4>
+                </div>
+                <div style="padding-top: 1%">
+                    <h4>Awards: {{ movie.Awards }}</h4>
+                </div>
+                <div style="padding-top: 3%">
+                    <button onclick="window.location='/add_to_library/{{ movie.imdbID }}'" class="page-scroll btn btn-xl">Add to my library</button>
+                </div>
+            </div>
+        </div>
+    </body>
+
+{% endblock content %}
