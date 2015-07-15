@@ -17,6 +17,9 @@ class IndexView(generic.ListView):
 def IndexTest(request):
     return render(request, 'movies/index.html')
 
+def signin(request):
+    return render(request, 'movies/signin.html')
+
 def UserSignUp(request):
     if request.POST.get('password1') != request.POST.get('password2'):
         return render (request, 'movies/index.html', {'ErrorMessage':'Your passwords must match'})
@@ -28,8 +31,7 @@ def UserSignUp(request):
     u.email = email
     u.password = password
     u.save()
-
-    return render (request, 'movies/index.html', {'ErrorMessage':'This is an error message'})
+    return signin(request)
 
 def MovieList(request):
     themovies = Movie.objects.all()

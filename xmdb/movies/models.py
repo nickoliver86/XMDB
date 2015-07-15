@@ -28,14 +28,9 @@ class Actor(models.Model):
     def __str__(self):
         return self.name
 
-    # def __init__(self, acts):
-    #     super(Actor, self).__init__()
-    #     actor_list = acts.split()
-
 class User(User):
     def __str__(self):
         return self.username
-
 
 class Movie(models.Model):
     name = models.TextField()
