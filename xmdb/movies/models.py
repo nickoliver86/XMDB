@@ -8,17 +8,30 @@ class Director(models.Model):
     def __str__(self):
         return self.name
 
+    # def __init__(self, dir):
+    #     super(Director, self).__init__()
+    #     self.name = dir
+
 class Writer(models.Model):
     name = models.TextField()
 
     def __str__(self):
         return self.name
 
+    # def __init__(self, wri):
+    #     super(Writer, self).__init__()
+    #     self.name = wri
+
 class Actor(models.Model):
     name = models.TextField()
 
     def __str__(self):
         return self.name
+
+    # def __init__(self, acts):
+    #     super(Actor, self).__init__()
+    #     actor_list = acts.split()
+
 class User(User):
     def __str__(self):
         return self.username
@@ -27,19 +40,27 @@ class User(User):
 class Movie(models.Model):
     name = models.TextField()
     year = models.IntegerField()
-    director = models.ForeignKey(Director)
-    writer = models.ForeignKey(Writer)
-    actors = models.ManyToManyField(Actor)
-    #STARRATINGS = [i for i in range(1, 6)]
-    #rating = models.IntegerField(max_length=1, choices=STARRATINGS)
+    director = models.ForeignKey(Director, null=True, blank=True)
+    writer = models.ForeignKey(Writer, null=True, blank=True)
+    actors = models.ManyToManyField(Actor, blank=True)
     RATED = (
         (1, 'G'),
         (2, 'PG'),
         (3, 'PG-13'),
         (4, 'R')
     )
-    rated = models.IntegerField(choices=RATED)
+    rated = models.IntegerField(choices=RATED, null=True, blank=True)
     thumbnail = models.ImageField(upload_to="movie_thumbnails", null=True, blank=True)
+    poster = models.TextField(null=True)
 
     def __str__(self):
-        return "%s (%d)" % (self.name, self.year)
+        return "%s (%d)" % (self.name, int(self.year))
+
+    # def __init__(self, name, year, director, writer, actors, rated):
+    #     super(Movie, self).__init__()
+    #     self.name = name
+    #     self.year = year
+    #     self.director = director
+    #     self.writer = writer
+    #     self.actors = actors
+    #     self.rated = rated

@@ -39,6 +39,9 @@
                 <div style="padding-top: 1%">
                     <h4>Awards: {{ movie.Awards }}</h4>
                 </div>
+                <div style="padding-top: 3%">
+                    <button onclick="window.location='/add_to_library/{{ movie.imdbID }}'" class="page-scroll btn btn-xl">Add to my library</button>
+                </div>
             </div>
         </div>
     </body>

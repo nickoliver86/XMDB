@@ -19,7 +19,8 @@
                     </thead>
                     {% for movie in movies %}
                         <tr style= "background-color: transparent">
-                            <td><img src="{{ MEDIA_URL }}{{ movie.thumbnail }}"/></td>
+                            <!--<td><img src="{{ MEDIA_URL }}{{ movie.thumbnail }}"/></td>-->
+                            <td><img width="80%" height="40%" src="{{ movie.poster }}"/></td>
                             <td style="vertical-align: middle; text-align: left"><a style="color:#ffffff; font-weight: bold; text-decoration: none" href="/movie_summary/{{ movie.id }}">{{movie.name}}</a></td>
                             <td style="vertical-align: middle; text-align: left">{{movie.year}}</td>
                             <td style="vertical-align: middle; text-align: left">{{movie.director}}</td>

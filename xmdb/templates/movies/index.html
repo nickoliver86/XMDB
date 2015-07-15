@@ -52,7 +52,10 @@
                         <a href="#page-top"></a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="movie_list">Movies</a>
+                        <a class="page-scroll" href="movie_list">My Library</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#search">Search</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="#signin">Sign In</a>
@@ -71,6 +74,24 @@
             </div>
         </div>
     </header>
+
+    <section id="search">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading">Search</h2>
+                </div>
+            </div>
+        </div>
+        <div class="container" style= "width:33%;">
+            <form action="{% url 'movies:Search' %}" method="post" class="">
+                {% csrf_token %}
+                <h4 style="color: red">{{ SearchError }}</h4>
+                <input type="text" class="form-control" name="search_query" id ="search_query" placeholder="Search a movie title" required autofocus>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Go</button>
+            </form>
+        </div>
+    </section>
 
     <section id="signup">
         <div class="container">
@@ -91,7 +112,7 @@
                 <input type="password" class="form-control" name="password2" id = "password2" placeholder="Confirm Password" required>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">
                     Sign up</button>
-                <a href="#" class="pull-right need-help">Need help? </a><span class="clearfix"></span>
+                <a href="http://www.reactionface.info/sites/default/files/images/1287666826226.png" class="pull-right need-help">Need help? </a><span class="clearfix"></span>
             </form>
         </div>
     </section>
