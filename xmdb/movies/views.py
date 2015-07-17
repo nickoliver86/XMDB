@@ -22,7 +22,7 @@ def signin(request):
 
 def UserSignUp(request):
     if request.POST.get('password1') != request.POST.get('password2'):
-        return render (request, 'movies/index.html', {'ErrorMessage':'Your passwords must match'})
+        return render(request, 'movies/index.html', {'ErrorMessage':'Your passwords must match'})
     username = request.POST.get('username')
     email = request.POST.get('email')
     password = request.POST.get('password1')

@@ -8,19 +8,11 @@ class Director(models.Model):
     def __str__(self):
         return self.name
 
-    # def __init__(self, dir):
-    #     super(Director, self).__init__()
-    #     self.name = dir
-
 class Writer(models.Model):
     name = models.TextField()
 
     def __str__(self):
         return self.name
-
-    # def __init__(self, wri):
-    #     super(Writer, self).__init__()
-    #     self.name = wri
 
 class Actor(models.Model):
     name = models.TextField()
@@ -52,11 +44,3 @@ class Movie(models.Model):
     def __str__(self):
         return "%s (%d)" % (self.name, int(self.year))
 
-    # def __init__(self, name, year, director, writer, actors, rated):
-    #     super(Movie, self).__init__()
-    #     self.name = name
-    #     self.year = year
-    #     self.director = director
-    #     self.writer = writer
-    #     self.actors = actors
-    #     self.rated = rated
