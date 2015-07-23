@@ -55,15 +55,24 @@
                     <li class="hidden">
                         <a href="#page-top"></a>
                     </li>
-                    <li>
+                    {% if not user.is_authenticated %}
+                        <li>
+                            <a class="page-scroll" href="#search">Search</a>
+                        </li>
+                        <li>
+                            <a class="page-scroll" href="{% url 'movies:signin' %}" >Sign In</a>
+                        </li>
+                    {% else %}
+                        <li>
                         <a class="page-scroll" href="movie_list">My Library</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#search">Search</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="{% url 'movies:signin' %}" >Sign In</a>
-                    </li>
+                        </li>
+                        <li>
+                            <a class="page-scroll" href="#search">Search</a>
+                        </li>
+                        <li>
+                            <a class="page-scroll" href="{% url 'movies:signout' %}" >Sign Out</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -72,9 +81,13 @@
     <header>
         <div class="container">
             <div class="intro-text">
-                <div class="intro-lead-in">Welcome To Excella Movie Database!</div>
-                <div class="intro-heading"></div>
-                <a href="#signup" class="page-scroll btn btn-xl">Sign up</a>
+                {% if not user.is_authenticated %}
+                    <div class="intro-lead-in">Welcome To Excella Movie Database!</div>
+                    <div class="intro-heading"></div>
+                    <a href="#signup" class="page-scroll btn btn-xl">Sign up</a>
+                {% else %}
+                    <div class="intro-lead-in">Hi {{user}}! Feel free to search below</div>
+                {% endif %}
             </div>
         </div>
     </header>
@@ -97,29 +110,31 @@
         </div>
     </section>
 
-    <section id="signup">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2 class="section-heading">Sign up</h2>
-                    <h3 class="section-subheading text-muted">Create your account:</h3>
+    {% if not user.is_authenticated %}
+        <section id="signup">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h2 class="section-heading">Sign up</h2>
+                        <h3 class="section-subheading text-muted">Create your account:</h3>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="container" style= "width:33%;">
-            <form action="{% url 'movies:UserSignUp' %}" method="post" class="">
-                {% csrf_token %}
-                {{ ErrorMessage }}
-                <input type="text" class="form-control" name="username" id ="username" placeholder="Enter Desired Username" required>
-                <input type="text" class="form-control" name="email" id ="email" placeholder="Email" required>
-                <input type="password" class="form-control" name="password1" id="password1" placeholder="Password" required>
-                <input type="password" class="form-control" name="password2" id = "password2" placeholder="Confirm Password" required>
-                <button class="btn btn-lg btn-primary btn-block" type="submit">
-                    Sign up</button>
-                <a href="http://www.reactionface.info/sites/default/files/images/1287666826226.png" class="pull-right need-help">Need help? </a><span class="clearfix"></span>
-            </form>
-        </div>
-    </section>
+            <div class="container" style= "width:33%;">
+                <form action="{% url 'movies:UserSignUp' %}" method="post" class="">
+                    {% csrf_token %}
+                    {{ ErrorMessage }}
+                    <input type="text" class="form-control" name="username" id ="username" placeholder="Enter Desired Username" required>
+                    <input type="text" class="form-control" name="email" id ="email" placeholder="Email" required>
+                    <input type="password" class="form-control" name="password1" id="password1" placeholder="Password" required>
+                    <input type="password" class="form-control" name="password2" id = "password2" placeholder="Confirm Password" required>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">
+                        Sign up</button>
+                    <a href="http://www.reactionface.info/sites/default/files/images/1287666826226.png" class="pull-right need-help">Need help? </a><span class="clearfix"></span>
+                </form>
+            </div>
+        </section>
+    {% endif %}
 
     <footer>
         <div class="container">

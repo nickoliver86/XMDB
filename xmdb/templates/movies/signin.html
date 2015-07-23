@@ -1,14 +1,15 @@
-{% comment %} 
-   FIXME This doesn't actually extend the base template...you're
-   overwritting the entire document you inherit
-{% endcomment %}
+<!DOCTYPE html>
+<html lang="en">
 
 {% extends 'movies/base.html' %}
 {% load staticfiles %}
 
+{% comment %}
+   FIXME This doesn't actually extend the base template...you're
+   overwritting the entire document you inherit
+{% endcomment %}
 
-<!DOCTYPE html>
-<html lang="en">
+
 
 <head>
 
@@ -83,10 +84,11 @@
             <div class="col-sm-6 col-md-4 col-md-offset-4">
                 <h1 class="text-center login-title">Sign in to XMDB</h1>
                 <div class="account-wall">
-                    <form action = "" method="post" class="form-signin">
+                    <form action = "{% url 'movies:signin' %}" method="post" class="form-signin">
+                        {% csrf_token %}
                         <label>{{ UsernameErrorMessage }} {{ PasswordErrorMessage }}</label>
-                    <input type="text" class="form-control" placeholder="Username" required autofocus>
-                    <input type="password" class="form-control" placeholder="Password" required>
+                    <input type="text" name="username" class="form-control" placeholder="Username" required autofocus>
+                    <input type="password" name="password" class="form-control" placeholder="Password" required>
                     <button class="btn btn-lg btn-primary btn-block" type="submit">
                         Sign in</button>
                     <label class="checkbox pull-left">

@@ -7,13 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('movies', '0004_auto_20150714_1558'),
+        ('movies', '0002_auto_20150723_1312'),
     ]
 
     operations = [
-        migrations.AlterField(
+        migrations.RenameField(
             model_name='movie',
-            name='actors',
-            field=models.ManyToManyField(to='movies.Actor'),
+            old_name='uzers',
+            new_name='users',
         ),
     ]

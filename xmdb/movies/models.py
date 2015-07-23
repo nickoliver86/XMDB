@@ -20,9 +20,9 @@ class Actor(models.Model):
     def __str__(self):
         return self.name
 
-class User(User):
-    def __str__(self):
-        return self.username
+# class User(User):
+#     def __str__(self):
+#         return self.username
 
 class Movie(models.Model):
     name = models.TextField()
@@ -40,7 +40,12 @@ class Movie(models.Model):
     thumbnail = models.ImageField(upload_to="movie_thumbnails", null=True, blank=True)
     poster = models.TextField(null=True)
     imdbId = models.TextField(null=True)
+    users = models.ManyToManyField(User)
 
     def __str__(self):
         return "%s (%d)" % (self.name, int(self.year))
+
+# class MovieList(models.Model):
+#     user_list = models.ForeignKey(User)
+#     movies = models.ManyToManyField(Movie)
 

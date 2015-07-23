@@ -84,6 +84,13 @@ DATABASES = {
     }
 }
 
+HAYSTACK_SITECONF = 'search_sites'
+
+HAYSTACK_SEARCH_ENGINE = 'solr'
+
+HAYSTACK_SOLR_URL = '0.0.0.0:8983'
+
+LOGIN_URL = 'movies/index.html'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -107,3 +114,5 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+TIMEOUT = 500

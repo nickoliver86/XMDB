@@ -39,14 +39,16 @@
                 <div style="padding-top: 1%">
                     <h4>Awards: {{ movie.Awards }}</h4>
                 </div>
-                {% if exists_in_library == False %}
-                    <div style="padding-top: 3%">
-                        <button onclick="window.location='/add_to_library/{{ movie.imdbID }}'" class="page-scroll btn btn-xl">Add to my library</button>
-                    </div>
-                {% else %}
-                    <div style="padding-top: 3%">
-                        <button onclick="window.location='/remove_from_library/{{ movie.imdbID }}'" class="page-scroll btn btn-xl">Remove from my library</button>
-                    </div>
+                {% if user.is_authenticated %}
+                    {% if exists_in_library == False %}
+                        <div style="padding-top: 3%">
+                            <button onclick="window.location='/add_to_library/{{ movie.imdbID }}'" class="page-scroll btn btn-xl">Add to my library</button>
+                        </div>
+                    {% else %}
+                        <div style="padding-top: 3%">
+                            <button onclick="window.location='/remove_from_library/{{ movie.imdbID }}'" class="page-scroll btn btn-xl">Remove from my library</button>
+                        </div>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
