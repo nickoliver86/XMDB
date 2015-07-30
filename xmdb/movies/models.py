@@ -45,7 +45,4 @@ class Movie(models.Model):
     def __str__(self):
         return "%s (%d)" % (self.name, int(self.year))
 
-# class MovieList(models.Model):
-#     user_list = models.ForeignKey(User)
-#     movies = models.ManyToManyField(Movie)
 

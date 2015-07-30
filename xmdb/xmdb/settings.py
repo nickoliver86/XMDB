@@ -12,6 +12,25 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from os import environ
+from django.core.exceptions import ImproperlyConfigured
+import dj_database_url
+
+def get_env_setting(setting, default=None):
+    """ Get the environment setting or return the default, if specified, otherwise an exception """
+    try:
+        var_set = environ[setting]
+        if var_set == 'true' or var_set == 'True':
+            return True
+        elif var_set == 'false' or var_set == 'False':
+            return False
+        return var_set
+    except KeyError:
+        if default is None:
+            error_msg = "Set the %s env variable" % setting
+            raise ImproperlyConfigured(error_msg)
+        else:
+            return default
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -39,7 +58,14 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'requests',
     'movies',
+    'django_nose',
 )
+
+# TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+#
+# NOSE_ARGS = [
+#     '--with-coverage',
+# ]
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -78,10 +104,7 @@ WSGI_APPLICATION = 'xmdb.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': dj_database_url.config(default=get_env_setting('DATABASE_URL', 'sqlite:////db.sqlite3'))
 }
 
 HAYSTACK_SITECONF = 'search_sites'
@@ -90,7 +113,7 @@ HAYSTACK_SEARCH_ENGINE = 'solr'
 
 HAYSTACK_SOLR_URL = '0.0.0.0:8983'
 
-LOGIN_URL = 'movies/index.html'
+LOGIN_URL = '/signin/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/

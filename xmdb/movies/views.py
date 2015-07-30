@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.views import generic
 from django.contrib.auth.models import User
 from movies.models import *
@@ -10,30 +10,24 @@ from django.contrib.auth import authenticate, login, logout
 import requests
 from django import forms, views
 from django.contrib.auth.forms import UserCreationForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import pdb
 # Create your views here.
 
-class IndexView(generic.ListView):
-    #template_name = 'movies/index.html'
-    def get_queryset(self):
-        """Return the last five published questions."""
-        return "hey"
-
-# FIXME Regarding naming conventions, best to follow pep-8.  
+# FIXME Regarding naming conventions, best to follow pep-8. --fixed
 # methods should be lower case and words separated by underscores
 # Classes can be first letter capitalized (not camel case), no underscores
 
 def index_test(request):
-    #import pdb; pdb.set_trace()
     return render(request, 'movies/index.html')
 
 def sign_in(request):
-    # FIXME What if user is already logged in?
+    # FIXME What if user is already logged in?  -- fixed
     if request.method == 'POST':
         un = request.POST.get('username')
         pw = request.POST.get('password')
         user = authenticate(username=un, password=pw)
-        #user = User.objects.get(username=un, password=pw)
-        #import pdb; pdb.set_trace()
+
         if user:
             if user.is_active:
                 login(request, user)
@@ -41,22 +35,12 @@ def sign_in(request):
             else:
                 return HttpResponseRedirect("Your account is disabled.")
         else:
-            print('Invalid login details: {0}, {1}'.format(un, pw))
+            #print('Invalid login details: {0}, {1}'.format(un, pw))
             return HttpResponse("Invalid login details supplied.")
     else:
         return render(request, 'movies/signin.html', {})
 
 def user_sign_up(request):
-    # This is inefficient and dangerous!  Never take input directly from the 
-    # request and store directly in the database!!!  
-    # FIXME Use a ModelForm here
-    # if request.POST.get('password1') != request.POST.get('password2'):
-    #     return render(request, 'movies/index.html', {'ErrorMessage':'Your passwords must match'})
-    # username = request.POST.get('username')
-    # email = request.POST.get('email')
-    # password = request.POST.get('password1')
-    # u = User.objects.create_user(username, email, password)
-    # u.save()
 
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -67,101 +51,112 @@ def user_sign_up(request):
             form = UserCreationForm()
     return render(request, "movies/index.html")
 
-@login_required
-def movie_list(request):
-    #themovies = Movie.objects.all()
-    # liaison = UserList.objects.get(user=request.user)
-    themovies = request.user.movie_set.all()
-    #The following retrieves movie posters from api for movies added through admin console
+def movie_summary(request, movie_id, search_query=None):
 
-    # FIXME We're making requests for every single movie every time we
-    # display the movie list! Why don't we store the meta data in the database
-    # and only grab the stuff we need
+    if not request.user.is_authenticated or request.user.is_anonymous:
+        movielist = Movie.objects.all()
+    else:
+        movielist = request.user.movie_set.all()
+    try:
+        m = movielist.get(imdbId=movie_id)
+    except Movie.DoesNotExist:
+        r = requests.get('http://www.omdbapi.com/?i={0}&plot=short&r=json'.format(movie_id))
+        d = Director.objects.get_or_create(name=r.json().get('Director'))[0]
+        w = Writer.objects.get_or_create(name=r.json().get('Writer'))[0]
+        stars = r.json().get('Actors').split(', ')
+        alist = []
+        for a in stars:
+            if a not in Actor.objects.all():
+                actor = Actor.objects.get_or_create(name=a)[0]
+                alist.append(actor)
+                actor.save()
 
-    # FIXME Add pagination, movie list may get long
-    for movie in themovies:
-        r = requests.get('http://www.omdbapi.com/?t={0}&y=&plot=short&r=json'.format(movie.name.replace(' ', '+')))
-        movie.poster = r.json().get('Poster')
-        movie.imdbId = r.json().get('imdbID')
-        movie.save()
-    return render(request, 'movies/movie_list.html', {"movies": themovies})
+        j = r.json()
 
-def movie_summary(request, movie_id):
-    #m = Movie.objects.get(id=movie_id)
-    #movielist = UserList.objects.get(user=request.user).movies
-    movielist = request.user.movie_set.all()
-    m = movielist.get(id=movie_id)
-    # for movie in movielist:
-    #     if movie.id == movie_id:
-    #         m = movie
-    #         break
-    # FIXME When we grab this stuff from the database, why do we need to make another
-    # request to the omdbapi?  Why can't we just ensure that when we store the movie
-    # in the database that it's fully parsed so I don't have to call the api again?
+        if j.get('Rated') == 'G':
+            rated = 1
+        elif j.get('Rated') == 'PG':
+            rated = 2
+        elif j.get('Rated') == 'PG-13':
+            rated = 3
+        else:
+            rated = 4
+
+        new_movie = Movie.objects.get_or_create(name=r.json().get('Title'), year=r.json().get('Year'),
+                                         director=d, writer=w, rated=rated,
+                                         poster=r.json().get('Poster'), imdbId=r.json().get('imdbID'))[0]
+        new_movie.save()
+        for a in alist:
+            new_movie.actors.add(a)
+        new_movie.save()
+        r = requests.get('http://www.omdbapi.com/?t={0}&y=&plot=short&r=json'.format(search_query.replace(' ', '+')))
+        return render(request, 'movies/movie_summary.html', {'movie': r.json, 'exists_in_library': False})
 
     r = requests.get('http://www.omdbapi.com/?t={0}&y=&plot=short&r=json'.format(m.name.replace(' ', '+')))
 
     try:
-        exists_in_library = Movie.objects.get(name=r.json().get('Title')).name
+        if not request.user.is_authenticated:
+            exists_in_library = False
+        else:
+            exists_in_library = request.user.movie_set.get(name=r.json().get('Title')).name
     except Movie.DoesNotExist:
         exists_in_library = False
+
     return render(request, 'movies/movie_summary.html', {'movie': r.json, 'exists_in_library': exists_in_library})
 
 def search(request):
     search_query = request.POST.get('search_query')
+
     r = requests.get('http://www.omdbapi.com/?t={0}&y=&plot=short&r=json'.format(search_query.replace(' ', '+')))
     try:
         exists_in_library = Movie.objects.get(name=r.json().get('Title')).name
     except Movie.DoesNotExist:
         exists_in_library = False
     if r.json().get('Response') == 'True':
-        return render(request, 'movies/movie_summary.html', {'movie': r.json, 'exists_in_library': exists_in_library})
+        return movie_summary(request, r.json().get('imdbID'), search_query)
     else:
         return render(request, 'movies/index.html', {'SearchError':'Movie not found!'})
 
 def add_to_library(request, id):
     # FIXME Grab any extra fields we will need in the future and save
     # so we don't have to make extra requests
-    r = requests.get('http://www.omdbapi.com/?i={0}&plot=short&r=json'.format(id))
-    j = r.json()
-    d = Director.objects.create(name=j.get('Director'))
-    d.save()
-    w = Writer.objects.create(name=j.get('Writer'))
-    w.save()
-    p = j.get('Poster')
-    stars = j.get('Actors').split(', ')
-    alist = []
-    for a in stars:
-        actor = Actor.objects.create(name=a)
-        alist.append(actor)
-        actor.save()
+    m = Movie.objects.get(imdbId=id)
 
-    if j.get('Rated') == 'G':
-        rated = 1
-    elif j.get('Rated') == 'PG':
-        rated = 2
-    elif j.get('Rated') == 'PG-13':
-        rated = 3
-    else:
-        rated = 4
-
-    m = Movie.objects.get_or_create(name=j.get('Title'), year=j.get('Year'),
-                             director=d, writer=w, rated=rated, poster=p,
-                             imdbId=j.get('imdbID'))[0]
-    m.users.add(request.user)
-    m.save()
-    for a in alist:
-        m.actors.add(a)
+    if request.user not in m.users.all():
+        m.users.add(request.user)
     m.save()
 
     return redirect('/movie_list')
 
 def remove_from_library(request, id):
-    deleteme = Movie.objects.get(imdbId=id)
-    deleteme.delete()
+    removeme = request.user.movie_set.get(imdbId=id)
+    request.user.movie_set.remove(removeme)
+
     return redirect('/movie_list')
 
 def sign_out(request):
     logout(request)
     return redirect('/')
 
+@login_required
+def pagination(request):
+    movie_list = themovies = request.user.movie_set.all()
+    paginator = Paginator(movie_list, 10)
+
+    page = request.GET.get('page')
+    try:
+        movies = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        movies = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        movies = paginator.page(paginator.num_pages)
+
+    for movie in themovies:
+        r = requests.get('http://www.omdbapi.com/?t={0}&y=&plot=short&r=json'.format(movie.name.replace(' ', '+')))
+        movie.poster = r.json().get('Poster')
+        movie.imdbId = r.json().get('imdbID')
+        movie.save()
+
+    return render_to_response('movies/movie_list.html', {"movies": movies})
