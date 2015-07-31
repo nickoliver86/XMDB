@@ -58,14 +58,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'requests',
     'movies',
-    'django_nose',
 )
-
-# TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-#
-# NOSE_ARGS = [
-#     '--with-coverage',
-# ]
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -107,11 +100,11 @@ DATABASES = {
     'default': dj_database_url.config(default=get_env_setting('DATABASE_URL', 'sqlite:////db.sqlite3'))
 }
 
-HAYSTACK_SITECONF = 'search_sites'
-
-HAYSTACK_SEARCH_ENGINE = 'solr'
-
-HAYSTACK_SOLR_URL = '0.0.0.0:8983'
+# HAYSTACK_SITECONF = 'search_sites'
+#
+# HAYSTACK_SEARCH_ENGINE = 'solr'
+#
+# HAYSTACK_SOLR_URL = '0.0.0.0:8983'
 
 LOGIN_URL = '/signin/'
 
@@ -133,6 +126,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 

@@ -1,1 +1,1 @@
-web: gunicorn config.wsgi
+web: gunicorn xmdb.wsgi
