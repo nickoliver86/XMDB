@@ -37,7 +37,7 @@ class Movie(models.Model):
         (4, 'R')
     )
     rated = models.IntegerField(choices=RATED, null=True, blank=True)
-    thumbnail = models.ImageField(upload_to="movie_thumbnails", null=True, blank=True)
+    #thumbnail = models.ImageField(upload_to="movie_thumbnails", null=True, blank=True)
     poster = models.TextField(null=True)
     imdbId = models.TextField(null=True)
     users = models.ManyToManyField(User)
