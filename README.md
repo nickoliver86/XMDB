@@ -1,6 +1,4 @@
-*******
 # XMDB
-*******
 
 XMDB is meant to be a Python Django proof of concept and is a work in progress.
 It makes use of The Open Movie Database API (OMDb API): http://omdbapi.com/
