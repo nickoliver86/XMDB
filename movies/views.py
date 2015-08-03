@@ -61,6 +61,10 @@ def movie_summary(request, movie_id, search_query=None):
         m = movielist.get(imdbId=movie_id)
     except Movie.DoesNotExist:
         r = requests.get('http://www.omdbapi.com/?i={0}&plot=short&r=json'.format(movie_id))
+        imdb = r.json().get('imdbID')
+        themoviedb = requests.get('http://api.themoviedb.org/3/movie/{0}?external_source=imdb_id/images&api_key=a922b176fe232a0599b7a991011c6dd6'.format(imdb))
+        themoviedb.encoding = 'ISO-8859-1'
+        poster_url = themoviedb.json().get('poster_path')[1:]
         d = Director.objects.get_or_create(name=r.json().get('Director'))[0]
         w = Writer.objects.get_or_create(name=r.json().get('Writer'))[0]
         stars = r.json().get('Actors').split(', ')
@@ -83,8 +87,10 @@ def movie_summary(request, movie_id, search_query=None):
             rated = 4
 
         new_movie = Movie.objects.get_or_create(name=r.json().get('Title'), year=r.json().get('Year'),
-                                         director=d, writer=w, rated=rated,
-                                         poster=r.json().get('Poster'), imdbId=r.json().get('imdbID'))[0]
+                                         director=d, writer=w, rated=rated, imdbId=r.json().get('imdbID'))[0]
+
+        new_movie.poster = 'http://image.tmdb.org/t/p/w300/{0}'.format(poster_url)
+
         new_movie.save()
         for a in alist:
             new_movie.actors.add(a)
@@ -108,11 +114,6 @@ def search(request):
     search_query = request.POST.get('search_query')
 
     r = requests.get('http://www.omdbapi.com/?t={0}&y=&plot=short&r=json'.format(search_query.replace(' ', '+')))
-    imdb = r.json().get('imdbID')
-    themoviedb = requests.get('http://api.themoviedb.org/3/movie/{0}?external_source=imdb_id/images&api_key=a922b176fe232a0599b7a991011c6dd6'.format(imdb))
-    pdb.set_trace()
-    poster_url = themoviedb.json().get('poster_path'[1:])
-    pdb.set_trace()
 
     try:
         exists_in_library = Movie.objects.get(name=r.json().get('Title')).name
