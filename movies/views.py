@@ -105,9 +105,12 @@ def movie_summary(request, movie_id, search_query=None):
     r = requests.get('http://www.omdbapi.com/?t={0}&y=&plot=short&r=json'.format(m.name.replace(' ', '+')))
 
     try:
-        if not request.user.is_authenticated or request.user.is_anonymous:
+        if not request.user.is_authenticated:
             exists_in_library = False
         else:
+            # if request.user.is_anonymous:
+            #     exists_in_library = False
+            # else:
             exists_in_library = request.user.movie_set.get(name=r.json().get('Title')).name
     except Movie.DoesNotExist:
         exists_in_library = False
