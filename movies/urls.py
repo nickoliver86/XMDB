@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'search/$', views.search, name ='Search'),
     url(r'^add_to_library/(\w+)/$', views.add_to_library, name='add_to_library'),
     url(r'^remove_from_library/(\w+)/$', views.remove_from_library, name='remove_from_library'),
+    url(r'test403/$', views.test403, name ='test403'),
 ]

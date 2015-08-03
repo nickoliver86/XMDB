@@ -95,7 +95,7 @@ def movie_summary(request, movie_id, search_query=None):
     r = requests.get('http://www.omdbapi.com/?t={0}&y=&plot=short&r=json'.format(m.name.replace(' ', '+')))
 
     try:
-        if not request.user.is_authenticated:
+        if not request.user.is_authenticated or request.user.is_anonymous:
             exists_in_library = False
         else:
             exists_in_library = request.user.movie_set.get(name=r.json().get('Title')).name
@@ -160,3 +160,7 @@ def pagination(request):
         movie.save()
 
     return render_to_response('movies/movie_list.html', {"movies": movies})
+
+def test403(request):
+    r = requests.get('http://www.omdbapi.com/?t=Cars&y=&plot=short&r=json')
+    render_to_response('movies/test403.html', {'json': r.json()})

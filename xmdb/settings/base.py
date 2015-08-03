@@ -97,7 +97,7 @@ WSGI_APPLICATION = 'xmdb.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default=get_env_setting('DATABASE_URL', 'sqlite:////db.sqlite3'))
+    'default': dj_database_url.config(default=get_env_setting('DATABASE_URL', 'sqlite:///db.sqlite3'))
 }
 
 # HAYSTACK_SITECONF = 'search_sites'
