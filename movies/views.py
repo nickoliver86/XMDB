@@ -63,7 +63,7 @@ def movie_summary(request, movie_id, search_query=None):
         r = requests.get('http://www.omdbapi.com/?i={0}&plot=short&r=json'.format(movie_id))
         imdb = r.json().get('imdbID')
         themoviedb = requests.get('http://api.themoviedb.org/3/movie/{0}?external_source=imdb_id/images&api_key=a922b176fe232a0599b7a991011c6dd6'.format(imdb))
-        themoviedb.encoding = 'ISO-8859-1'
+        #themoviedb.encoding = 'ISO-8859-1'
         poster_url = themoviedb.json().get('poster_path')[1:]
         d = Director.objects.get_or_create(name=r.json().get('Director'))[0]
         w = Writer.objects.get_or_create(name=r.json().get('Writer'))[0]
