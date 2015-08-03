@@ -115,7 +115,7 @@ def search(request):
     if r.json().get('Response') == 'True':
         return movie_summary(request, r.json().get('imdbID'), search_query)
     else:
-        return render(request, 'movies/index.html', {'SearchError':'Movie not found!'})
+        return render(request, 'movies/index.html', {'SearchError': 'Movie not found!'})
 
 def add_to_library(request, id):
     # FIXME Grab any extra fields we will need in the future and save
@@ -161,6 +161,6 @@ def pagination(request):
 
     return render_to_response('movies/movie_list.html', {"movies": movies})
 
-def test403(request):
-    r = requests.get('http://www.omdbapi.com/?t=Cars&y=&plot=short&r=json')
-    return render_to_response('movies/test403.html', {'json': r.json()})
+# def test403(request):
+#     r = requests.get('http://www.omdbapi.com/?t=Cars&y=&plot=short&r=json')
+#     return render_to_response('movies/test403.html', {'json': r.json()})
