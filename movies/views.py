@@ -111,8 +111,8 @@ def search(request):
     imdb = r.json().get('imdbID')
     themoviedb = requests.get('http://api.themoviedb.org/3/movie/{0}?external_source=imdb_id/images&api_key=a922b176fe232a0599b7a991011c6dd6'.format(imdb))
     pdb.set_trace()
-    # poster_url = themoviedb.get('poster_path'[1:])
-    # pdb.set_trace()
+    poster_url = themoviedb.json().get('poster_path'[1:])
+    pdb.set_trace()
 
     try:
         exists_in_library = Movie.objects.get(name=r.json().get('Title')).name
