@@ -96,7 +96,10 @@ def movie_summary(request, movie_id, search_query=None):
         for a in alist:
             new_movie.actors.add(a)
         new_movie.save()
-        r = requests.get('http://www.omdbapi.com/?t={0}&y=&plot=short&r=json'.format(search_query.replace(' ', '+')))
+        if search_query is not None:
+            r = requests.get('http://www.omdbapi.com/?t={0}&y=&plot=short&r=json'.format(search_query.replace(' ', '+')))
+        else:
+            r = requests.get('http://www.omdbapi.com/?i={0}&plot=short&r=json'.format(imdb))
         return render(request, 'movies/movie_summary.html', {'movie': r.json, 'poster': template_poster, 'exists_in_library': False})
 
     r = requests.get('http://www.omdbapi.com/?t={0}&y=&plot=short&r=json'.format(m.name.replace(' ', '+')))
