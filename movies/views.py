@@ -166,7 +166,7 @@ def pagination(request):
 
     for movie in themovies:
         r = requests.get('http://www.omdbapi.com/?t={0}&y=&plot=short&r=json'.format(movie.name.replace(' ', '+')))
-        movie.poster = r.json().get('Poster')
+        # movie.poster = r.json().get('Poster')
         movie.imdbId = r.json().get('imdbID')
         movie.save()
 
