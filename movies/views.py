@@ -110,6 +110,7 @@ def search(request):
     r = requests.get('http://www.omdbapi.com/?t={0}&y=&plot=short&r=json'.format(search_query.replace(' ', '+')))
     imdb = r.json().get('imdbID')
     themoviedb = requests.get('http://api.themoviedb.org/3/movie/{0}?external_source=imdb_id/images&api_key=a922b176fe232a0599b7a991011c6dd6'.format(imdb))
+    pdb.set_trace()
     poster_url = themoviedb.get('poster_path'[1:])
     pdb.set_trace()
 
