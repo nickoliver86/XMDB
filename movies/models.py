@@ -45,4 +45,7 @@ class Movie(models.Model):
     def __str__(self):
         return "%s (%d)" % (self.name, int(self.year))
 
+    def __unicode__(self):
+        return self.name
+
 
