@@ -163,4 +163,4 @@ def pagination(request):
 
 def test403(request):
     r = requests.get('http://www.omdbapi.com/?t=Cars&y=&plot=short&r=json')
-    render_to_response('movies/test403.html', {'json': r.json()})
+    return render_to_response('movies/test403.html', {'json': r.json()})
