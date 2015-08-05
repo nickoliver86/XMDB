@@ -62,9 +62,11 @@ def movie_summary(request, movie_id, search_query=None):
     except Movie.DoesNotExist:
         r = requests.get('http://www.omdbapi.com/?i={0}&plot=short&r=json'.format(movie_id))
         imdb = r.json().get('imdbID')
+        # pdb.set_trace()
         themoviedb = requests.get('http://api.themoviedb.org/3/movie/{0}?external_source=imdb_id/images&api_key=a922b176fe232a0599b7a991011c6dd6'.format(imdb))
         themoviedb.encoding = 'ISO-8859-1'
-        poster_url = themoviedb.json().get('poster_path')[1:]
+        poster_url = themoviedb.json().get('poster_path')
+        poster_url = poster_url[1:]
         d = Director.objects.get_or_create(name=r.json().get('Director'))[0]
         w = Writer.objects.get_or_create(name=r.json().get('Writer'))[0]
         stars = r.json().get('Actors').split(', ')
@@ -91,7 +93,7 @@ def movie_summary(request, movie_id, search_query=None):
 
         new_movie.poster = 'http://image.tmdb.org/t/p/w300/{0}'.format(poster_url)
         template_poster = 'http://image.tmdb.org/t/p/w300/{0}'.format(poster_url)
-
+        r.json()[template_poster] = template_poster
         new_movie.save()
         for a in alist:
             new_movie.actors.add(a)
@@ -105,17 +107,16 @@ def movie_summary(request, movie_id, search_query=None):
     r = requests.get('http://www.omdbapi.com/?t={0}&y=&plot=short&r=json'.format(m.name.replace(' ', '+')))
 
     try:
-        if not request.user.is_authenticated:
-            exists_in_library = False
-        else:
-            # if request.user.is_anonymous:
-            #     exists_in_library = False
-            # else:
+        if request.user.is_authenticated and request.user.is_active:
             exists_in_library = request.user.movie_set.get(name=r.json().get('Title')).name
+
+        else:
+            exists_in_library = False
+
     except Movie.DoesNotExist:
         exists_in_library = False
 
-    return render(request, 'movies/movie_summary.html', {'movie': r.json, 'exists_in_library': exists_in_library})
+    return render(request, 'movies/movie_summary.html', {'movie': r.json, 'poster': m.poster, 'exists_in_library': exists_in_library})
 
 def search(request):
     search_query = request.POST.get('search_query')
